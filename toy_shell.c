@@ -33,6 +33,7 @@ int main(void)
         }
         
         printf("[%s]\n", command);
+         printf('송민준');
       
         pid = fork();
         if (pid < 0) {
