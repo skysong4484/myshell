@@ -3,14 +3,13 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <pwd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 
 
-
 #define MAX_LEN_LINE    10
 #define LEN_HOSTNAME   30
-
 
 int main(void)
 {
@@ -21,24 +20,24 @@ int main(void)
   
     while (true) {
         char *s;
-        char s_full[10][30];
+        char s_full[10][10];
         int len;
         int count_program=0; //입력받은 프로그램의 수;
+
+
+        printf("다수의 프로그램을 실행하려면 a; b; c의 형식으로 입력하시오\n");
+        printf("종료를 하려면 exit를 입력하시오\n");
 
         s = fgets(command, MAX_LEN_LINE, stdin);
         len = strlen(command);
 
-
-        printf("다수의 프로그램을 실행하려면 a; b; c의 형식으로 입력하시오 \n");
-        printf(" 종료를 하려면 exit를 입력하시오\n")
-
-    //username@hostname $
+        //username@hostname $
         char hostname[LEN_HOSTNAME + 1];
         memset(hostname, 0x00, sizeof(hostname));
         gethostname(hostname, LEN_HOSTNAME);
             
-        printf("username: %s\n", getpwuid(getuid())->pw_name );
-        printf("hostname: " %s\n, hostname);
+        printf("username: %s\n", getpwuid(getuid())->pw_name);
+        printf("hostname: %s\n", hostname);
 
 
         //exit
@@ -55,11 +54,11 @@ int main(void)
           if( s[i] == ';')
            count_program++;
        }
-        printf("%d 개의 프로그램이 순차적으로 실행됩니다.",count_program+1);
+        printf("%d 개의 프로그램이 다음과 같은 순서로 실행됩니다.\n",count_program);
 
         count_program =0; 
-
         char *ptr = strtok(s,"; ");
+        
         while(ptr != NULL)
         {
             printf("  %s \n" ,ptr);
@@ -68,20 +67,19 @@ int main(void)
             ptr = strtok(NULL,"; ");
         }
        
-
 for(int i=0;i<count_program;i++)
 {
     s = s_full[i];
     strcpy(command,s);
-    
+    len =strlen(command);
+
         
         if (s == NULL) {
             fprintf(stderr, "fgets failed\n");
             exit(1);
         }
        
-
-    len =strlen(command);
+        
         printf("%d\n", len);
         if (command[len - 1] == '\n') {
             command[len - 1] = '\0'; 
@@ -89,8 +87,6 @@ for(int i=0;i<count_program;i++)
         
         printf("[%s]\n", command);
       
-     
-
         pid = fork();
         if (pid < 0) {
             fprintf(stderr, "fork failed\n");
@@ -118,8 +114,5 @@ for(int i=0;i<count_program;i++)
     }
     return 0;
 }
-
-
-
 
 
